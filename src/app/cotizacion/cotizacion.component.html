@@ -1,0 +1,297 @@
+<div class="container mt-3">
+      <div class="row mt-4">
+         <div class="col-md-3">
+            <div class="form-group">
+               <label>Fecha de cotización</label>
+               <input type=date class="form-control">
+            </div>
+         </div>
+         <div class="col-md-3">
+            <div class="form-group">
+               <label>Valides de oferta</label>
+               <input type=date class="form-control">
+            </div>
+         </div>
+         <div class="col-md-3">
+            <div class="form-group">
+               <label>Fecha de vencimiento</label>
+               <input type=date class="form-control" disabled="">
+            </div>
+         </div>
+         <div class="col-md-3">
+            LOGO
+         </div>
+      </div>
+      <div class="row py-3" style="border: 1px solid #E9ECEF; background-color: #F2F2F2;box-shadow: 0px 0px 7px 1px rgba(227,227,227,0.78);">
+         <div class="col-md-12 text-center">
+            <h4>Datos del cliente{{idCliente}}</h4>
+            <!-- <input type="text" value="{{id_documento}}" id="id_documento"> -->
+         </div>
+         <div class="col-md-12">
+               <label>Cédula o Nit</label>
+               <div class="col-md-6 d-flex justify-content-between" style="padding: 0px !important;">
+                  <input type=text class="form-control" #nit name="nit" value="">
+                  <button type="button" class="btn btn-sm py-2 mx-2 px-4" style="background-color: #B2B9BB" (click)="getcliente(nit.value)">Buscar</button>
+                  <button type="button" class="btn btn-sm py-2 mx-2 px-4 btn-outline-secondary" >Nuevo</button>
+               </div>
+               <p><small style="color: orange;">{{msgErrorCliente}}</small></p>
+         </div>
+         <div class="col-md-6">
+            <div class="form-group">
+               <label for="exampleInputEmail1">Nombre completo</label>
+               <input type=text class="form-control"placeholder="" name="nombre"  value="{{cliente.nombre}}">
+            </div>
+         </div>
+         <div class="col-md-6">
+            <div class="form-group">
+               <label for="exampleInputEmail1">Dirección</label>
+               <input type=text class="form-control" name="calle" value="{{cliente.calle}}">
+            </div>
+         </div>
+         <div class="col-md-4">
+            <div class="form-group">
+               <label for="exampleInputEmail1">E-mail</label>
+               <input type=text class="form-control" name = "email"value="{{cliente.email}}">
+            </div>
+         </div>
+         <div class="col-md-4">
+            <div class="form-group">
+               <label for="exampleInputEmail1">Teléfono</label>
+               <input type=text class="form-control" name="telefono" value="{{cliente.telefono}}">
+            </div>
+         </div>
+         <div class="col-md-4">
+            <div class="form-group">
+               <label for="exampleInputEmail1">Celular</label>
+               <input type=text class="form-control" value="{{cliente.celular}}">
+            </div>
+         </div>
+      </div>
+
+      <!-- Botones productos -->
+      <div class="col-md-10 offset-1 my-3">
+         <div class="row">
+            <div class="col-md-4">
+               <h5>Nuevo tipo de producto - iddocumento: {{iddocumento}}</h5>
+            </div>
+            <div class="col-md-6">
+               <div class="row">
+                  <div class="col-md-4">
+                     <!-- <button type="button" class="btn btn-default">Item sencillo</button> -->
+                     <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal_item">Item sencillo</button>
+                  </div>
+                  <div class="col-md-4">
+                     <button type="button" class="btn btn-default">Talonario</button>
+                  </div>
+                  <div class="col-md-4">
+                     <button type="button" class="btn btn-default">Revista</button>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <!-- Tabla cotizaciones -->
+   <div class="container">
+      <div class="row">
+         <div class="col-md-12" style="box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15)">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Descripcion</th>
+                  <th scope="col">Valor unitario</th>
+                  <th scope="col">Valor total</th>
+                  <th scope="col">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let documento of allCotizaciones">
+                  <th>{{documento.documento_id}}</th>
+                  <td>{{documento.cantidad}}</td>
+                  <td>{{documento.descripcion}}</td>
+                  <td>{{documento.val_unitario}}</td>
+                  <td>$ {{documento.val_total}}</td>
+                  <td><button class="btn btn-sm btn-secondary mr-2" (click) ="editarItem(documento.documento_id,documento.id_detalle)">Editar</button>
+                     <button class="btn btn-sm btn-secondary">Eliminar</button></td>
+                </tr>
+              </tbody>
+            </table>
+            <br><br>
+         </div>
+      </div>
+   </div>
+<!-- Modal -->
+<div class="modal fade" id="modal_item" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Item Sencillo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form [formGroup] = "formItem" (ngSubmit)="guardarItem()">
+      	<!-- <input type="text" formControlName="tipo_documento" value="ITEM SENCILLO"> -->
+        <div class="modal-body">
+           <div class="col-md-10 offset-1" id="view_item" name="soy_name">
+             <div class="row">
+                <div class="col-md-12">
+                   <div class="form-group row">
+                       <label class="col-md-2 col-form-label">Plantilla</label>
+                       <div class="col-md-7">
+                            <select class="custom-select" formControlName="plantilla">
+                              <option selected>Seleccionar...</option>
+                              <option value="1">Plantilla 1</option>
+                              <option value="2">Plantilla 2</option>
+                              <option value="3">Plantilla 3</option>
+                            </select>
+                       </div>
+                    </div>
+                 </div>
+             </div>
+             <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group">
+                       <label>cantidad</label>
+                       <input type=number class="form-control"  formControlName="cantidad" value="{{item.cantidad}}">
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="form-group">
+                       <label>Descripción</label>
+                       <input type=text class="form-control"  formControlName="descripcion" value="{{item.descripcion}}">
+                    </div>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-md-6">
+                   <div class="form-group">
+                       <label class="text-center">Tamaño</label>
+                       <div class="d-flex justify-content-between">
+                          <input type=number class="form-control" formControlName="tam_1">
+                          <label class="col-md-2 col-form-label">X</label>
+                          <input type=number class="form-control" formControlName="tam_2">
+                       </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                   <div class="form-group">
+                       <label class="text-center">Tintas</label>
+                       <div class="d-flex justify-content-between">
+                          <input type=number class="form-control" formControlName="tinta_1">
+                          <label class="col-md-2 col-form-label">X</label>
+                          <input type=number class="form-control" formControlName="tinta_2">
+                       </div>
+                    </div>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                       <label>Valor diseño</label>
+                       <input type=text class="form-control" formControlName="val_diseno" value="{{item.vr_diseno}}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                       <label>Transporte</label>
+                       <input type=text class="form-control" formControlName="transporte">
+                    </div>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                       <label>Valor rifle</label>
+                       <input type=text class="form-control" formControlName="val_rifle" value="{{item.vr_rifle}}">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                    		<label class="col-form-label">Tipo maquina</label>
+								<select class="custom-select" formControlName="val_tip_maq">
+									<option selected>Selecciona...</option>
+									<option value="1">Maquina 1</option>
+									<option value="2">Maquina 2</option>
+									<option value="3">Maquina 3</option>
+								</select>
+                      <!--  <label>Tipo maquina</label>
+                       <input type=number class="form-control" formControlName="val_tip_maq"> -->
+                    </div>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-md-6">
+                	<div class="form-group">
+                     <label class="col-form-label">Tipo papel</label>
+							<select class="custom-select" formControlName="tipo_papel">
+								<option selected>Selecciona...</option>
+								<option value="1">Tipo 1</option>
+								<option value="2">Tipo 2</option>
+								<option value="3">Tipo 3</option>
+							</select>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                       <label>% Ganancia</label>
+                       <input type=text class="form-control" formControlName="por_ganancia">
+                    </div>
+                </div>
+             </div>
+             <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                       <label>Costos</label>
+                       <input type=number class="form-control" formControlName="costos">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                       <label>Ganancias</label>
+                       <input type=text class="form-control" formControlName="ganancia">
+                    </div>
+                </div>
+             </div>
+           </div>
+           <div class="col-md-10 offset-1" id="view_acabado" style="display: none">
+              <div class="row">
+                 <div class="col-md-12">
+                 	<!-- <input type="text" formControlName = 'isnum_acabado' id="isnum_acabado"> -->
+                    <table class="table" border="0">
+                      <thead>
+                        <tr>
+                          <th scope="col">Descripción</th>
+                          <th scope="col">Medida</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let acabado of allAcabados">
+                          <td>
+                             <div class="custom-control custom-checkbox">
+                               <input type="checkbox" class="custom-control-input" id="customCheck{{acabado.id_acabado}}" formControlName="num_acabado{{acabado.id_acabado}}" (click) = "iscabado($event.target.checked)">
+                               <label class="custom-control-label" for="customCheck{{acabado.id_acabado}}">{{acabado.descripcion}}</label>
+                             </div>
+                          </td>
+                          <td>{{acabado.unidad_medida}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                 </div>
+              </div>
+           </div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" #cerrarModalItem>Cancelar</button>
+          <div>
+             <button  type="button" class="btn btn-primary" *ngIf="mostrar" (click) ="anterior()" >Anterior</button>
+             <button type="button" class="btn btn-primary mx-3" *ngIf="!mostrar" (click) ="siguiente()">Siguiente</button>
+             <button type="submit" class="btn btn-primary mx-3" *ngIf="mostrar">Guardar</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
